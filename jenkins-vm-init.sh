@@ -1,6 +1,7 @@
 #cloud-config
 package_upgrade: true
 runcmd:
+  - apt-get install make -y
   - wget -q -O - https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz | tar -C /usr/local -xz
   - echo "PATH=\"\$PATH:/usr/local/go/bin\"" >> /etc/profile
   - wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | apt-key add -
