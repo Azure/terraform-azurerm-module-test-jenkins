@@ -46,7 +46,7 @@ variable "virtual_machine_name" {
 
 variable "virtual_machine_size" {
   description = "The size of the Jenkins virtual machine."
-  default     = "Standard_D4_v3"
+  default     = "Standard_A2_v2"
 }
 
 variable "virtual_machine_osdisk_name" {
@@ -70,4 +70,8 @@ variable "admin_username" {
 
 variable "ssh_public_key_data" {
   description = "The SSH public key for remote connection of the Jenkins virtual machine."
+}
+
+variable "ssh_private_key_data" {
+  description = "The SSH private key for remote connection. It is used to configure the environment after the virtual machine is created."
 }

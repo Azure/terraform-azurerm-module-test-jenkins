@@ -30,7 +30,7 @@ resource "azurerm_public_ip" "pip" {
   name                         = "${var.public_ip_name}"
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
-  public_ip_address_allocation = "Dynamic"
+  public_ip_address_allocation = "Static"
 }
 
 resource "azurerm_network_security_group" "allows" {
@@ -91,7 +91,6 @@ resource "azurerm_virtual_machine" "vm" {
   os_profile {
     computer_name  = "${var.virtual_machine_computer_name}"
     admin_username = "${var.admin_username}"
-    custom_data    = "${file("${path.module}/jenkins-vm-init.sh")}"
   }
 
   os_profile_linux_config {
@@ -100,5 +99,51 @@ resource "azurerm_virtual_machine" "vm" {
       path     = "/home/${var.admin_username}/.ssh/authorized_keys"
       key_data = "${var.ssh_public_key_data}"
     }
+  }
+
+  connection {
+    type        = "ssh"
+    host        = "${azurerm_public_ip.pip.ip_address}"
+    user        = "${var.admin_username}"
+    private_key = "${var.ssh_private_key_data}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      # Build Essentials
+      "sudo apt-get update",
+      "sudo apt-get install build-essential -y",
+      "sudo apt-get install unzip -y",
+      "sudo apt-get install make -y",
+
+      # Go (put in PATH) & Terraform (not put in PATH)
+      "wget -q -O - https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz | sudo tar -C /usr/local -xz",
+      "wget -q -O terraform_linux_amd64.zip https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip",
+      "sudo unzip -d /usr/local/terraform terraform_linux_amd64.zip",
+      "sudo sh -c 'echo PATH=\\$PATH:/usr/local/go/bin >> /etc/profile'",
+
+      # Ruby & Bundler
+      "sudo apt-add-repository -y ppa:brightbox/ruby-ng",
+      "sudo apt-get update",
+      "sudo apt-get install ruby2.4 ruby2.4-dev -y",
+      "sudo gem install bundler",
+
+      # Azure CLI
+      "sudo sh -c 'echo deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main > /etc/apt/sources.list.d/azure-cli.list'",
+      "sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893",
+      "sudo apt-get install apt-transport-https",
+      "sudo apt-get update && sudo apt-get install azure-cli",
+
+      # Jenkins
+      "wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -",
+      "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
+      "sudo apt-get update",
+      "sudo apt-get install jenkins -y",
+
+      # SSH Key Pairs
+      "ssh-keygen -t rsa -f ~/.ssh/tf_id_rsa -q -P \"\"",
+
+      "sudo reboot",
+    ]
   }
 }
