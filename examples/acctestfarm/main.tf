@@ -10,10 +10,8 @@
 #   8. Set up SSH port forwarding using [Putty](http://realprogrammers.com/how_to/set_up_an_ssh_tunnel_with_putty.html)
 #      - Source port: 12345 (Or any port your like)
 #      - Destination: 127.0.0.1:8080
-#   9. After remote connected to the machine, run "sudo cat /var/lib/jenkins/secrets/initialAdminPassword" and remember the output
-#  10. Open a browser and navigate to "http://localhost:12345" locally
-#  11. Fill in the Jenkins password in Step 9
-#  12. Install suggested plugins and your Jenkins is on
+#   9. Open a browser and navigate to "http://localhost:12345" locally
+#  10. Following the instructions to initialize the Jenkins
 #
 # Usage (Ubuntu):
 #   You are a Linux guy, you could figure it out by yourself.

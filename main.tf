@@ -120,7 +120,7 @@ resource "azurerm_virtual_machine" "vm" {
       "wget -q -O - https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz | sudo tar -C /usr/local -xz",
       "wget -q -O terraform_linux_amd64.zip https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip",
       "sudo unzip -d /usr/local/terraform terraform_linux_amd64.zip",
-      "sudo sh -c 'echo PATH=\\$PATH:/usr/local/go/bin >> /etc/profile'",
+      "sudo sh -c 'echo \"PATH=\\$PATH:/usr/local/go/bin\" >> /etc/profile'",
 
       # Ruby & Bundler
       "sudo apt-add-repository -y ppa:brightbox/ruby-ng",
@@ -129,19 +129,19 @@ resource "azurerm_virtual_machine" "vm" {
       "sudo gem install bundler",
 
       # Azure CLI
-      "sudo sh -c 'echo deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main > /etc/apt/sources.list.d/azure-cli.list'",
+      "sudo sh -c 'echo \"deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ wheezy main\" > /etc/apt/sources.list.d/azure-cli.list'",
       "sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 52E16F86FEE04B979B07E28DB02C46DF417A0893",
       "sudo apt-get install apt-transport-https",
       "sudo apt-get update && sudo apt-get install azure-cli",
 
       # Jenkins
       "wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -",
-      "sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'",
+      "sudo sh -c 'echo \"deb http://pkg.jenkins.io/debian-stable binary/\" > /etc/apt/sources.list.d/jenkins.list'",
       "sudo apt-get update",
       "sudo apt-get install jenkins -y",
 
-      # SSH Key Pairs
-      "ssh-keygen -t rsa -f ~/.ssh/tf_id_rsa -q -P \"\"",
+      # Add jenkins group to sudoers
+      "sudo sh -c 'echo \"jenkins ALL=(ALL) NOPASSWD: ALL\" >> /etc/sudoers'",
 
       "sudo reboot",
     ]
