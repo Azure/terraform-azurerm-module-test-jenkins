@@ -1,4 +1,3 @@
-[
 # Azure RM Jenkins infrastructure for Terraform module test
 
 This is a Terraform module which will create the Jenkins test environment on Azure. You could use this environment to test other modules, including both unit test as well as the end-to-end test.
