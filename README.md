@@ -14,10 +14,16 @@ module "test-farm-jenkins" {
   location             = "West US 2"
   resource_group_name  = "module-test-farm-rg"
   admin_username       = "tfmodtester"
-  ssh_public_key_data  = "ssh-rsa [YOUR SSH PUBLIC KEY HERE] rsa-key-20171102"
+  public_domain_name   = "tfci"
+  ssh_public_key_data  = "ssh-rsa [YOUR SSH PUBLIC KEY] rsa-key-20171116"
   ssh_private_key_data = "${file("[YOUR SSH PRIVATE KEY FILE PATH]")}"
 }
 
 output "public_ip" {
   value = "${module.test-farm-jenkins.virtual_machine_public_ip}"
 }
+
+output "dns" {
+  value = "${module.test-farm-jenkins.virtual_machine_dns_name}"
+}
+```
