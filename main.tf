@@ -31,6 +31,7 @@ resource "azurerm_public_ip" "pip" {
   location                     = "${azurerm_resource_group.rg.location}"
   resource_group_name          = "${azurerm_resource_group.rg.name}"
   public_ip_address_allocation = "Static"
+  domain_name_label            = "${var.public_domain_name}"
 }
 
 resource "azurerm_network_security_group" "allows" {
@@ -46,6 +47,17 @@ resource "azurerm_network_security_group" "allows" {
     protocol                   = "Tcp"
     source_port_range          = "*"
     destination_port_range     = "22"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+  security_rule {
+    name                       = "AllowHttpsInBound"
+    priority                   = 1001
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_port_range     = "443"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
@@ -118,7 +130,7 @@ resource "azurerm_virtual_machine" "vm" {
 
       # Go (put in PATH) & Terraform (not put in PATH)
       "wget -q -O - https://storage.googleapis.com/golang/go1.9.2.linux-amd64.tar.gz | sudo tar -C /usr/local -xz",
-      "wget -q -O terraform_linux_amd64.zip https://releases.hashicorp.com/terraform/0.10.8/terraform_0.10.8_linux_amd64.zip",
+      "wget -q -O terraform_linux_amd64.zip https://releases.hashicorp.com/terraform/0.11.1/terraform_0.11.1_linux_amd64.zip",
       "sudo unzip -d /usr/local/terraform terraform_linux_amd64.zip",
       "sudo sh -c 'echo \"PATH=\\$PATH:/usr/local/go/bin\" >> /etc/profile'",
 

@@ -26,6 +26,10 @@ variable "public_ip_name" {
   default     = "jenkins-pip"
 }
 
+variable "public_domain_name" {
+  description = "The domain name of the Jenkins virtual machine (without azure subdomain)."
+}
+
 variable "network_security_group_name" {
   description = "The name of the network security group (firewall rules) for Jenkins virtual machine."
   default     = "ssh-allow"

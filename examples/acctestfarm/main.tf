@@ -21,10 +21,15 @@ module "test-farm-jenkins" {
   location             = "West US 2"
   resource_group_name  = "module-test-farm-rg"
   admin_username       = "tfmodtester"
-  ssh_public_key_data  = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAuVkDlT5u7WMh4qYyALS45Ldms8PJOiRAwpFFYmOn3AJ83TRm/ucPpCbrEchL5KUMtrISBdEwLXSqqfOGNSq+U6E90f7npuML7Hjm9ZUkXO7/mxm8rdefBwwZSVNaDgBFnphHfppWfYVriCiINo9XQjzxKAQadI7QjO1if7LeTaVJhOoV6VMvOPujP/rS4+as1nQGlrW6xbwNoE4HdA8dQU18Vzh8puYIMk7ISmUm89I8hKJlmyiWJl9OynHnmLtZ5jYc2c2b3USgwzkTr2oRK+F7Md8yJuGVl2ZlaIEK90n87YauHDeSe2StlJLLZB3l8+IdiwADpuwpKHLxkthr4w== rsa-key-20171102"
-  ssh_private_key_data = "${file("C:\\Users\\junyi\\SSHKeys\\id_rsa_private")}"
+  public_domain_name   = "tfci"
+  ssh_public_key_data  = "ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAj4v5pRh3Lx0zs8pSYoRQiZdT7PlsTqQJn12J9zh8ebC/Prs2Xyyex8n34k9UC8Q293ALbyE4DZE66aphCU9Dqtb5+LTCK7b/DCGFSaGwDHC/jej2YP3UBGbiBKBFtVrOSFLzul8d9r+ssjdJw+u6wBKpF+fIt9O2eHlOjAHuhuEMQnTnqdQpNsMq5Jjo/XzAf/yxcDhVLUUN9kLTuHpbvW6UHxYT1ejx+f6+WTk8p5lfW2J7B/qAbdIF4823/lCcTd3RfRmmRY8MkK4RtDAWZxHfqtkct04ZVoaTVZh5qDFaYnhsgoTJ2rut7VsUF3Q+gMTlKNk6ES4XGTZIUJFfHQ== rsa-key-20171116"
+  ssh_private_key_data = "${file("MyOneDrive\\Working\\JenkinsSSH.privatessh")}"
 }
 
 output "public_ip" {
   value = "${module.test-farm-jenkins.virtual_machine_public_ip}"
+}
+
+output "dns" {
+  value = "${module.test-farm-jenkins.virtual_machine_dns_name}"
 }
