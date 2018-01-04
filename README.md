@@ -1,14 +1,22 @@
 
-# Contributing
+# Azure RM Jenkins infrastructure for Terraform module test
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.microsoft.com.
+This is a Terraform module which will create the Jenkins test environment on Azure. You could use this environment to test other modules, including both unit test as well as the end-to-end test.
 
-When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+# Usage
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+```hcl
+module "test-farm-jenkins" {
+  source               = "Azure/module-test-jenkins/azurerm"
+  version              = "0.1.1"
+  
+  location             = "West US 2"
+  resource_group_name  = "module-test-farm-rg"
+  admin_username       = "tfmodtester"
+  ssh_public_key_data  = "ssh-rsa <THE SSH PUBLIC KEY HERE> rsa-key-20171102"
+  ssh_private_key_data = "${file("<YOUR SSH PRIVATE KEY FILE PATH>")}"
+}
+
+output "public_ip" {
+  value = "${module.test-farm-jenkins.virtual_machine_public_ip}"
+}
